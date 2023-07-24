@@ -19,7 +19,7 @@ pub use libsecp256k1_core::*;
 use arrayref::{array_mut_ref, array_ref};
 use core::convert::TryFrom;
 use digest::{generic_array::GenericArray, Digest};
-use rand::Rng;
+use rand::{CryptoRng, RngCore};
 
 #[cfg(feature = "std")]
 use core::fmt;
@@ -427,7 +427,7 @@ impl SecretKey {
         Self::parse(&a)
     }
 
-    pub fn random<R: Rng>(rng: &mut R) -> SecretKey {
+    pub fn random<R: RngCore + CryptoRng>(rng: &mut R) -> SecretKey {
         loop {
             let mut ret = [0u8; util::SECRET_KEY_SIZE];
             rng.fill_bytes(&mut ret);
